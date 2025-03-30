@@ -6,6 +6,7 @@ class RecipeProvider with ChangeNotifier {
   List<Recipe> _recipes = [];
 
   List<Recipe> get recipes => _recipes;
+  List<Recipe> get favoriteRecipes => _recipes.where((recipe) => recipe.isFavorite).toList();
 
   Future<void> loadRecipes() async {
     _recipes = await DatabaseService().getRecipes();
@@ -25,5 +26,10 @@ class RecipeProvider with ChangeNotifier {
   Future<void> deleteRecipe(int id) async {
     await DatabaseService().deleteRecipe(id);
     await loadRecipes();
+  }
+
+  void toggleFavoriteStatus(Recipe recipe) {
+    recipe.isFavorite = !recipe.isFavorite;
+    updateRecipe(recipe);
   }
 }

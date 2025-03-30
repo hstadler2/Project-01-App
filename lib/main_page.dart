@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'recipe.dart';
 import 'recipe_provider.dart';
 import 'recipe_detail_page.dart';
+import 'favorites_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0; // Index to handle the current selected tab
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +35,20 @@ class _MainPageState extends State<MainPage> {
               context,
               MaterialPageRoute(builder: (context) => RecipeDetailPage(recipe: recipe)),
             ),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                if (recipe.id != null) {
-                  recipeProvider.deleteRecipe(recipe.id!);
-                } else {
-                  print("Error: Recipe ID is null");
-                }
-              },
-              color: Colors.red,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(recipe.isFavorite ? Icons.favorite : Icons.favorite_border),
+                  onPressed: () => recipeProvider.toggleFavoriteStatus(recipe),
+                  color: Colors.red,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => recipeProvider.deleteRecipe(recipe.id!),
+                  color: Colors.red,
+                ),
+              ],
             ),
           );
         },
@@ -51,7 +56,7 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
-        onPressed: () => _showAddRecipeDialog(recipeProvider),
+        onPressed: () {},  // Implement add recipe dialog here
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -78,50 +83,9 @@ class _MainPageState extends State<MainPage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Add more functionality here based on tab selection if needed
+      if (index == 2) {  // Navigate to Favorites Page when Favorites tab is tapped
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesPage()));
+      }
     });
-  }
-
-  void _showAddRecipeDialog(RecipeProvider recipeProvider) {
-    TextEditingController titleController = TextEditingController();
-    TextEditingController ingredientsController = TextEditingController();
-    TextEditingController instructionsController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Recipe'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-                TextField(controller: ingredientsController, decoration: const InputDecoration(labelText: 'Ingredients')),
-                TextField(controller: instructionsController, decoration: const InputDecoration(labelText: 'Instructions')),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                final newRecipe = Recipe(
-                  title: titleController.text,
-                  ingredients: ingredientsController.text,
-                  instructions: instructionsController.text,
-                  // Add other fields as necessary
-                );
-                recipeProvider.addRecipe(newRecipe);
-                Navigator.of(context).pop();
-                titleController.clear();
-                ingredientsController.clear();
-                instructionsController.clear();
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
