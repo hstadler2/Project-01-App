@@ -8,7 +8,8 @@ void main() {
 }
 
 class RecipeApp extends StatelessWidget {
-  const RecipeApp({super.key});
+  // Ensure the constructor is marked as const and includes a key parameter
+  const RecipeApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,15 @@ class RecipeApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Recipe App',
-        home: MainPage(),
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          textTheme: TextTheme(
+            bodyLarge: TextStyle(color: Colors.black),
+            bodyMedium: TextStyle(color: Colors.grey[600]),
+          ),
+        ),
+        home: const MainPage(), // Ensure this widget is also using a const constructor if possible
       ),
     );
   }
