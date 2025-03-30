@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'recipe.dart';  // Make sure to import your Recipe model class
+import 'recipe.dart';
 
 class RecipeDetailPage extends StatelessWidget {
   final Recipe recipe;
