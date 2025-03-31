@@ -1,39 +1,47 @@
+// This file defines our Recipe model.
+import 'dart:convert';
+
 class Recipe {
   final int? id;
   final String title;
   final String ingredients;
   final String instructions;
+  bool isFavorite;
   List<String> dietaryPreferences;
-  bool isFavorite;  // Attribute to track if the recipe is marked as favorite
 
   Recipe({
     this.id,
     required this.title,
     required this.ingredients,
     required this.instructions,
+    this.isFavorite = false,
     this.dietaryPreferences = const [],
-    this.isFavorite = false,  // Default value for favorite status
   });
 
+  // Convert a Recipe to a Map for DB storage.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'ingredients': ingredients,
       'instructions': instructions,
-      'dietaryPreferences': dietaryPreferences.join(', '),  // Store as a comma-separated string
-      'isFavorite': isFavorite ? 1 : 0,  // Store as integer for database compatibility
+      'isFavorite': isFavorite ? 1 : 0,
+      'dietaryPreferences': jsonEncode(dietaryPreferences),
     };
   }
 
+  // Create a Recipe object from a DB Map.
   factory Recipe.fromMap(Map<String, dynamic> map) {
     return Recipe(
       id: map['id'],
-      title: map['title'],
-      ingredients: map['ingredients'],
-      instructions: map['instructions'],
-      dietaryPreferences: map['dietaryPreferences']?.split(', ') ?? [],  // Convert back to list from comma-separated string
-      isFavorite: map['isFavorite'] == 1,  // Convert from integer to boolean
+      title: map['title'] as String,
+      ingredients: map['ingredients'] as String,
+      instructions: map['instructions'] as String,
+      isFavorite: map['isFavorite'] == 1,
+      dietaryPreferences: map['dietaryPreferences'] != null &&
+          map['dietaryPreferences'].toString().isNotEmpty
+          ? (jsonDecode(map['dietaryPreferences']) as List).cast<String>()
+          : [],
     );
   }
 }

@@ -1,3 +1,4 @@
+// This page shows only the favorite recipes.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'recipe.dart';
@@ -10,24 +11,27 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recipeProvider = Provider.of<RecipeProvider>(context);
+    final favorites = recipeProvider.favoriteRecipes;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorite Recipes'),
         backgroundColor: Colors.green[800],
       ),
-      body: ListView.builder(
-        itemCount: recipeProvider.favoriteRecipes.length,
+      body: favorites.isEmpty
+          ? const Center(child: Text('No favorite recipes.'))
+          : ListView.builder(
+        itemCount: favorites.length,
         itemBuilder: (context, index) {
-          final recipe = recipeProvider.favoriteRecipes[index];
+          final recipe = favorites[index];
           return ListTile(
             title: Text(recipe.title),
             subtitle: Text(recipe.ingredients),
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RecipeDetailPage(recipe: recipe)),
+              MaterialPageRoute(
+                  builder: (context) => RecipeDetailPage(recipe: recipe)),
             ),
-            trailing: Icon(recipe.isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red),
           );
         },
       ),

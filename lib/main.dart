@@ -1,3 +1,4 @@
+// Main entry point of the app.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'recipe_provider.dart';
@@ -8,7 +9,6 @@ void main() {
 }
 
 class RecipeApp extends StatelessWidget {
-  // Ensure the constructor is marked as const and includes a key parameter
   const RecipeApp({Key? key}) : super(key: key);
 
   @override
@@ -21,12 +21,8 @@ class RecipeApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: TextTheme(
-            bodyLarge: TextStyle(color: Colors.black),
-            bodyMedium: TextStyle(color: Colors.grey[600]),
-          ),
         ),
-        home: const MainPage(), // Ensure this widget is also using a const constructor if possible
+        home: const MainPage(),
       ),
     );
   }
