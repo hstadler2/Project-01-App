@@ -1,8 +1,10 @@
 # meal_planning_app
 
-A new Flutter project.
+The most updated and newest version of the app is on master branch.
+
 
 ## Getting Started
+YouTube Video Link: https://youtu.be/0e9J7QaNfug
 
 This project is a starting point for a Flutter application.
 
